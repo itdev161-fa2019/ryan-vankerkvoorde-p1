@@ -1,0 +1,34 @@
+{
+  "name": "ryan-vankerkvoorde-p1",
+  "version": "1.0.0",
+  "description": "simple chat app using sockets",
+  "main": "server.js",
+  "scripts": {
+    "start": "node -r esm server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itdev161-fa2019/ryan-vankerkvoorde-p1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itdev161-fa2019/ryan-vankerkvoorde-p1/issues"
+  },
+  "homepage": "https://github.com/itdev161-fa2019/ryan-vankerkvoorde-p1#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.2.3",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-validator": "^6.2.0",
+    "mongodb": "^3.3.2",
+    "mongoose": "^5.7.5",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "nodemon": "^1.19.3"
+  },
+  "keywords": []
+}
