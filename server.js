@@ -1,39 +1,33 @@
-import express from "express";
 import config from "config";
-import connectDatabase from "./config/db";
-import { check, validationResult } from 'express-validator';
 
-const client = require('socket.io').listen(4000).sockets;
-const MongoClient = require('mongodb').MongoClient;
-
-//Init express application
-//const app = express();
-
-//Connect db
-//connectDatabase();
+const mongoClient = require('mongodb').MongoClient;
+const socketClient = require('socket.io').listen(4000).sockets;
 
 const uri = config.get("mongoURI");
 
-MongoClient.connect(uri, function (err, db) {
+//connect mongo
+mongoClient.connect(uri, function (err, client) {
+    var col = client.db("mongoChat");
     if (err) {
-        console.log('Error occurred while connecting to MongoDB Atlas...\n', err);
+        console.log('Error occurred while connecting to MongoDB...\n', err);
 
     }
 
-    console.log('MongoDBAtlas Connected');
+    console.log('MongoDB Connected');
 
     //connect to socket.io
-    client.on("connection", function (socket) {
-        let chat = db.collection('chats');
+    socketClient.on("connection", (socket) => {
+        let chat = col.collection('chats');
 
         //Create function to send status
-        sendStatus = function (s) {
+        function sendStatus(s) {
             socket.emit('status', s);
         }
 
         // Get Chats from mongo collection
-        chat.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
+        chat.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {   //doesnt work yet
             if (err) {
+                console.log('test');    //test for error spot
                 throw err;
             }
             //emit messages
@@ -50,7 +44,7 @@ MongoClient.connect(uri, function (err, db) {
             } else {
                 //insert message
                 chat, insert({ name: name, message: message }, function () {
-                    client.emit('output', [data]);
+                    SocketClient.emit('output', [data]);
 
                     //send status object
                     sendStatus({
@@ -72,28 +66,6 @@ MongoClient.connect(uri, function (err, db) {
         });
     });
 
+    client.close();
 });
 
-
-
-
-//  Configure Middleware
-//app.use(express.json({ extended: false }));
-
-//API endpoints
-/**
- * @route GET /
- * @desc Test endpoint
- */
-//app.get("/", (req, res) =>
-//    res.send("http get request sent to root api endpoint")
-//);
-
-/**
- * @route POST api/users
- * @desc Register user
- */
-//Connection Listener
-//const port = 5000;
-
-//app.listen(port, () => console.log(`Express server running on port ${port}`));
